@@ -1,20 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SourceMax.DataAccess.Fakes {
 
     public class FakeDbSet<T> : IDbSet<T> where T : class {
 
-        private HashSet<T> _data;
+        private HashSet<T> Data { get; set; } 
 
         public FakeDbSet() {
-            _data = new HashSet<T>();
+            this.Data = new HashSet<T>();
         }
 
         public FakeDbSet(T item) : this() {
@@ -22,50 +21,56 @@ namespace SourceMax.DataAccess.Fakes {
         }
 
         public FakeDbSet(IEnumerable<T> items) : this() {
-            items.ToList().ForEach(a => this.Add(a));
+            items.ToList().ForEach(item => this.Add(item));
         }
 
         public virtual T Find(params object[] keyValues) {
-            throw new NotImplementedException("Derive from FakeDbSet<T> and override Find");
+            throw new NotImplementedException("Not implemented, must override FakeDbSet<T> and implement the Find method.");
         }
 
         public T Add(T item) {
-            _data.Add(item);
+            this.Data.Add(item);
             return item;
         }
 
         public T Remove(T item) {
-            _data.Remove(item);
+            this.Data.Remove(item);
             return item;
         }
 
         public T Attach(T item) {
-            _data.Add(item);
+            this.Data.Add(item);
             return item;
         }
 
         public void Detach(T item) {
-            _data.Remove(item);
+            this.Data.Remove(item);
         }
 
         Type IQueryable.ElementType {
-            get { return _data.AsQueryable().ElementType; }
+            get { 
+                return this.Data.AsQueryable().ElementType; 
+            }
         }
 
         Expression IQueryable.Expression {
-            get { return _data.AsQueryable().Expression; }
+            get { 
+                return this.Data.AsQueryable().Expression; 
+            }
         }
 
         IQueryProvider IQueryable.Provider {
-            get { return _data.AsQueryable().Provider; }
+            get { 
+                return this.Data.AsQueryable().Provider; 
+            }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return _data.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() {
+            return this.Data.GetEnumerator();
         }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator() {
-            return _data.GetEnumerator();
+            return this.Data.GetEnumerator();
         }
 
         public T Create() {
@@ -74,7 +79,7 @@ namespace SourceMax.DataAccess.Fakes {
 
         public ObservableCollection<T> Local {
             get {
-                return new ObservableCollection<T>(_data);
+                return new ObservableCollection<T>(this.Data);
             }
         }
 

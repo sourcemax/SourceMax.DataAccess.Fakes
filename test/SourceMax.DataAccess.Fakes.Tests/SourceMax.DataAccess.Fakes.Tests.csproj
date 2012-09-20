@@ -60,7 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SourceMax.DataAccess.Fakes\SourceMax.DataAccess.Fakes.csproj">
+    <ProjectReference Include="..\..\src\SourceMax.DataAccess.Fakes\SourceMax.DataAccess.Fakes.csproj">
       <Project>{26f7d473-928a-4584-af1a-ba69bbb5deaf}</Project>
       <Name>SourceMax.DataAccess.Fakes</Name>
     </ProjectReference>
