@@ -36,6 +36,7 @@
 packages/
 nuget/
 *.nuspec
+*.nuget.bat
 
 # Others
 [Bb]in
