@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SourceMax.DataAccess.Fakes")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A set of data access-related fakes that can be used for unit testing purposes.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("SourceMax.org")]
 [assembly: AssemblyProduct("SourceMax.DataAccess.Fakes")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCopyright("Copyright © 2012 SourceMax.org")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
