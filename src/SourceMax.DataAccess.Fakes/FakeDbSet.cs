@@ -3,17 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace SourceMax.DataAccess.Fakes {
 
-    public class FakeDbSet<T> : IDbSet<T> where T : class {
+    public class FakeDbSet<T> : DbSet<T>, IQueryable, IEnumerable<T>, IDbAsyncEnumerable<T>, IDbSet<T> where T : class {
 
-        private HashSet<T> Data { get; set; } 
+        private ObservableCollection<T> Data { get; set; }
+
+        //private IQueryable Queryable { get; set; }
 
         public FakeDbSet() {
-            this.Data = new HashSet<T>();
+            this.Data = new ObservableCollection<T>();
+            //this.Queryable = this.Data.AsQueryable();
         }
 
         public FakeDbSet(T item) : this() {
@@ -24,21 +28,21 @@ namespace SourceMax.DataAccess.Fakes {
             items.ToList().ForEach(item => this.Add(item));
         }
 
-        public virtual T Find(params object[] keyValues) {
+        public override T Find(params object[] keyValues) {
             throw new NotImplementedException("Not implemented, must override FakeDbSet<T> and implement the Find method.");
         }
 
-        public T Add(T item) {
+        public override T Add(T item) {
             this.Data.Add(item);
             return item;
         }
 
-        public T Remove(T item) {
+        public override T Remove(T item) {
             this.Data.Remove(item);
             return item;
         }
 
-        public T Attach(T item) {
+        public override T Attach(T item) {
             this.Data.Add(item);
             return item;
         }
@@ -61,8 +65,8 @@ namespace SourceMax.DataAccess.Fakes {
 
         IQueryProvider IQueryable.Provider {
             get { 
-                return this.Data.AsQueryable().Provider; 
-            }
+                return new TestDbAsyncQueryProvider<T>(this.Data.AsQueryable().Provider); 
+            } 
         }
 
         IEnumerator IEnumerable.GetEnumerator() {
@@ -73,17 +77,21 @@ namespace SourceMax.DataAccess.Fakes {
             return this.Data.GetEnumerator();
         }
 
-        public T Create() {
+        public override T Create() {
             return Activator.CreateInstance<T>();
         }
 
-        public ObservableCollection<T> Local {
+        IDbAsyncEnumerator<T> IDbAsyncEnumerable<T>.GetAsyncEnumerator() {
+            return new TestDbAsyncEnumerator<T>(this.Data.GetEnumerator());
+        } 
+
+        public override ObservableCollection<T> Local {
             get {
-                return new ObservableCollection<T>(this.Data);
+                return this.Data;
             }
         }
 
-        public TDerivedEntity Create<TDerivedEntity>() where TDerivedEntity : class, T {
+        public override TDerivedEntity Create<TDerivedEntity>() {
             return Activator.CreateInstance<TDerivedEntity>();
         }
     }
